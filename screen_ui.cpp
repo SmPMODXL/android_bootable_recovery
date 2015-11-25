@@ -176,6 +176,9 @@ void ScreenRecoveryUI::draw_progress_locked() {
 
 void ScreenRecoveryUI::SetColor(UIElement e) {
     switch (e) {
+        case TITLE:
+            gr_color(255, 7, 7, 255);
+            break;
         case INFO:
             gr_color(249, 194, 0, 255);
             break;
@@ -228,8 +231,8 @@ static const char* REGULAR_HELP[] = {
 };
 
 static const char* LONG_PRESS_HELP[] = {
-    "Any button cycles highlight.",
-    "Long-press activates.",
+    "Press any button to change selection.",
+    "Long-press any button selects",
     NULL
 };
 
@@ -245,14 +248,10 @@ void ScreenRecoveryUI::draw_screen_locked() {
 
         int y = 0;
         if (show_menu) {
-            char recovery_fingerprint[PROPERTY_VALUE_MAX];
-            property_get("ro.bootimage.build.fingerprint", recovery_fingerprint, "");
+            SetColor(TITLE);
+            DrawTextLine(&y, "PureNexus Recovery", true);
 
             SetColor(INFO);
-            DrawTextLine(&y, "Android Recovery", true);
-            for (auto& chunk : android::base::Split(recovery_fingerprint, ":")) {
-                DrawTextLine(&y, chunk.c_str(), false);
-            }
             DrawTextLines(&y, HasThreeButtons() ? REGULAR_HELP : LONG_PRESS_HELP);
 
             SetColor(HEADER);
